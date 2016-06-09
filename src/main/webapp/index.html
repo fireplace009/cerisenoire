@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<html lang="en" class="no-js">
+<head>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cerise Noire - Lady Lunch - Miss Dinner</title>
+<meta name="description"
+	content="Traiteur op maat, Lunch voor bedrijven. Heerlijk maatwerk op je bord" />
+<meta name="keywords"
+	content="traiteur, Lochristi, gent, catering, feestmaal" />
+<meta name="author" content="Dumazzz" />
+<!-- Bootstrap -->
+<script src="js/modernizr.custom.js"></script>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/jquery.fancybox.css" rel="stylesheet">
+<link href="css/flickity.css" rel="stylesheet">
+<link href="css/animate.css" rel="stylesheet">
+<link
+	href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+	rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700'
+	rel='stylesheet' type='text/css'>
+<link href="css/styles.css" rel="stylesheet">
+<link href="css/queries.css" rel="stylesheet">
+
+<link rel="stylesheet" type="text/css" href="css/tooltip-line.css" />
+
+<!-- Facebook and Twitter integration -->
+<meta property="og:title" content="" />
+<meta property="og:image" content="" />
+<meta property="og:url" content="" />
+<meta property="og:site_name" content="" />
+<meta property="og:description" content="" />
+<meta name="twitter:title" content="" />
+<meta name="twitter:image" content="" />
+<meta name="twitter:url" content="" />
+<meta name="twitter:card" content="" />
+
+<!-- Some extra -->
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+<script>
+
+var teLaat = '... volgende week ...';
+
+function decrease(o){
+	if(parseInt(o.html()) > 0){
+		o.html(parseInt(o.html())-1);	
+	}
+	if(parseInt(o.html()) == 0){
+		o.css('opacity', 0.42);		
+	} 
+}
+function increase(o){	
+	o.html(parseInt(o.html())+1);
+	o.css('opacity', 1);		
+}
+function bestel(){
+	$('.orderbtns').show();
+	$('#bestel').hide();
+	$('#bevestig').show();
+	$('#annuleer').show();
+	$('#extraInfo').show();
+	$('.orderAmount').show();
+	updateTeLaat();
+}
+function bevestig(){
+	var email  = $('#email').val();
+	var monday = $('#mondayCnt').html();
+	var tuesday = $('#tuesdayCnt').html();
+	var wednesday = $('#wednesdayCnt').html();
+	var thursday = $('#thursdayCnt').html();
+	var friday = $('#fridayCnt').html();
+	
+	if(email == '' || email == undefined || !validateEmail(email)) {
+		alert('Gelieve een correct email adres te gebruiken.');
+	} else if(	(monday == '0' || monday == teLaat) 
+				&& (tuesday == '0' || tuesday == teLaat)
+				&& (wednesday == '0' || wednesday == teLaat)
+				&& (thursday == '0' || thursday == teLaat)
+				&& (friday == '0' || friday == teLaat)
+			){
+		alert('Gelieve minimum 1 lunch aan te duiden.');
+	} else {
+		
+		$('#bevestig').html('<img src="./img/fancybox_loading.gif" />');
+		
+		$.post( "p", 
+			{ 	
+				email: $('#email').val(), 
+				locatie: $('#locatie').val(),
+				//tijdstip: $('#tijdstip').val(),
+				maandag:monday,
+				maandag_dish:stripDescription($('#maandagDish').html()),
+				dinsdag:tuesday,
+				dinsdag_dish:stripDescription($('#dinsdagDish').html()),
+				woensdag:wednesday,
+				woensdag_dish:stripDescription($('#woensdagDish').html()),
+				donderdag:thursday,
+				donderdag_dish:stripDescription($('#donderdagDish').html()),
+				vrijdag:friday,
+				vrijdag_dish:stripDescription($('#vrijdagDish').html())
+			}, function( data ) {
+				$('#extraInfo').hide();
+				$('#bevestig').hide();
+				$('#bevestig').html('Bevestig!');
+				$('#annuleer').hide();
+				$('.orderbtns').hide();
+				alert('Besteld! U ontvangt zo meteen een email ter bevestiging. Super bedankt voor het vertrouwen en alvast smakelijk!');
+				$('.orderAmount').hide();
+				$('#bestel').show();
+				$('.orderAmount').hide().css('opacity', 0.42).html('0');
+				updateTeLaat();
+			} 
+		);		
+	}
+}
+function stripDescription(txt){
+	var splitIndex = txt.indexOf('<i class="tooltip');
+	if(splitIndex != -1){
+		return txt.substring(0,splitIndex);
+	}
+	return txt;
+}
+function annuleer(){
+	$('.orderbtns').hide();
+	$('#bestel').show();
+	$('#bevestig').hide();
+	$('#annuleer').hide();
+	$('#extraInfo').hide();
+	$('.orderAmount').hide().css('opacity', 0.42).html('0');
+	updateTeLaat();
+}
+
+function updateTeLaat(){
+	//handling order timing
+	var now = new Date();
+	switch(now.getDay()){
+    case 5:
+        $("#fridayCnt").html(teLaat);
+        $(".friday").hide();
+    case 4:
+        $("#thursdayCnt").html(teLaat);
+        $(".thursday").hide();
+    case 3:
+        $("#wednesdayCnt").html(teLaat);
+        $(".wednesday").hide();
+    case 2:
+        $("#tuesdayCnt").html(teLaat);
+        $(".tuesday").hide();
+    case 1:
+        $("#mondayCnt").html(teLaat);
+        $(".monday").hide();
+	}	
+}
+
+function validateEmail($email) {
+  var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+  return emailReg.test( $email );
+}
+
+$(function() {
+	updateTeLaat();
+	$.getJSON("p", function( data ) {
+	  var items = [];
+	  $.each( data, function( key, val ) {
+		splitted =val.split('||');
+	    $('#'+key+'Dish').html(splitted[0]+(splitted.length > 1 ? ' <i class="tooltip ingredients" style="position:absolute"><span class="tooltip-content"><span class="tooltip-text"><span class="tooltip-inner">'
+	    		+splitted[1]+'</span></span></span></i>':''));	    
+	  });
+	});
+});
+
+</script>
+
+</head>
+<body>
+	<!--[if lt IE 7]>
+		<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+		<![endif]-->
+	<!-- open/close -->
+	<header>
+		<section class="hero">
+			<div class="texture-overlay"></div>
+			<div class="container">
+				<div class="row nav-wrapper">
+					<div class="col-md-6 col-sm-6 col-xs-6 text-left"></div>
+					<div class="col-md-6 col-sm-6 col-xs-6 text-right navicon">
+						<p>MENU</p>
+						<a id="trigger-overlay" class="nav_slide_button nav-toggle"
+							href="#"><span></span></a>
+					</div>
+				</div>
+				<div class="row hero-content">
+					<div class="col-md-12">
+						<h1 class="animated fadeInDown">
+							<font style="font-weight: bolder; text-shadow: 2px 2px #6B6B6B;">Cerise
+								Noire</font> <br /> <font style="text-shadow: 2px 2px #8C4040;">De 
+								traiteur die jouw smaken voor je klaarmaakt</font>
+						</h1>
+						<a href="#features" class="learn-btn animated fadeInUp"
+							style="float:right;margin-right: 50px;    text-shadow: 2px 2px rgba(61, 10, 99, 0.75);"><b>Meer</b> (w)<b>eten...</b> <i
+							class="fa fa-arrow-down"></i></a>
+					</div>
+				</div>
+			</div>
+		</section>
+	</header>
+
+	<section class="features-list" id="features">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="col-md-4 feature-1 wp2">
+						<div class="feature-icon">
+							<span
+								style="display: block; background: url('./img/ladylunch_logo.png'); background-size: 95%; background-repeat: no-repeat; margin-top: 15px; margin-left: 4px;">&nbsp;</span>
+						</div>
+						<div class="feature-content">
+							<h1>Lady Lunch</h1>
+							<p>Uw dagelijkse dosis lekkers. Custom burgers, speciale wraps, hemelse quiche,... Gebracht tot bij uw bedrijf hier in de
+								buurt van Lochristi.</p>
+							<a href="#ladylunch"
+								class="read-more-btn">Lees meer <i
+								class="fa fa-chevron-circle-right"></i></a>
+						</div>
+					</div>
+					<div class="col-md-4 feature-2 wp2 delay-05s">
+						<div class="feature-icon">
+							<span
+								style="display: block; background: url('./img/cerisenoire_logo.png'); background-size: 95%; background-repeat: no-repeat; margin-top: 20px; margin-left: 4px;">&nbsp;</span>
+						</div>
+						<div class="feature-content">
+							<h1>Cerise Noire</h1>
+							<p>Babyborrels, lentefeesten, communies, ... Van elk feest maken
+								wij een gepersonaliseerd culinair hoogstandje!</p>
+							<a href="#cerisenoire"
+								class="read-more-btn">Lees meer <i
+								class="fa fa-chevron-circle-right"></i></a>
+						</div>
+					</div>
+					<div class="col-md-4 feature-3 wp2 delay-1s">
+						<div class="feature-icon">
+							<span
+								style="display: block; background: url('./img/missdinner_logo.png'); background-size: 95%; background-repeat: no-repeat; margin-top: 15px; margin-left: 4px;">&nbsp;</span>
+						</div>
+						<div class="feature-content">
+							<h1>Miss Dinner</h1>
+							<p>Geen inspiratie om te koken voor je bende. Van oervlaamse klassiekers tot een thaise of marrokaanse tafel. Te bestellen iedere dag van de week.</p>
+							<a href="#missdinner"
+								class="read-more-btn">Lees meer <i
+								class="fa fa-chevron-circle-right"></i></a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="video" id="cerisenoire">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<div class="features-img wp1">
+						<img src="./img/cerisenoire_logo.png" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="features-intro" >
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-6 nopadding features-intro-img">
+					<div class="features-bg">
+						<div class="texture-overlay"></div>
+					</div>
+				</div>
+				<div class="col-md-6 nopadding">
+					<div class="features-slider">
+						<ul class="slides" id="featuresSlider">
+							<li>
+								<h1>Cerise Noire maakt van uw feest een culinair hoogstandje</h1>
+								<p>Piekfijn verzorgde hapjes, gerechten, buffetten,...</p>
+								<p>
+									<a target="_blank" href="ceriseNoireEindejaarsMenu.pdf" 
+									class="download-btn">Download Kerst en Nieuwjaarsmenu <i class="fa fa-download"></i>
+									</a>
+								</p>
+							</li>
+							<li>
+								<h1>Niets op de kaart spreekt u aan ?</h1>
+								<p>Geen probleem !! Met heel veel plezier stellen we samen
+									met u een specifiek menu op.</p>
+								<p>
+									<a href="#screenshots"
+										class="arrow-btn">Ontdek hier enkele voorproevertjes ! <i
+										class="fa fa-long-arrow-right"></i></a>
+								</p>
+							</li>
+							<li>
+								<h1>Made with Love</h1>
+								<p>Volg
+									ons hier voor tips, tricks en lekkere receptjes !</p>
+								<p>
+									<a href="javascript:alert('coming soon...');"><img
+										src="./img/social/facebook_circle.png" class="socialCircles" /></a>
+									<a href="javascript:alert('coming soon...');"><img
+										src="./img/social/pinterest_circle.png" class="socialCircles" /></a>
+								</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="video" id="ladylunch">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<div class="features-img wp1">
+						<img src="./img/ladylunch_logo.png" />
+					</div>
+					<center>
+					<span style="position: absolute;bottom: 55px;text-align:center;display:block;">
+					Bestel hier uw dagelijkse dosis lekkers ! 
+  					Bestel tot 16:00 ten laatste voor de volgende dag, aangezien alles vers wordt gekocht en klaargemaakt. 
+  					We brengen u dan rond de middag uw bestelling tot aan uw bedrijf hier in Lochristi.
+  					</span>
+  					</center>
+  				</div>
+			</div>
+		</div>
+	</section>
+	<section class="showcase">
+		<div style="height:58px;background-color: #E6A525"></div>
+		<div class="showcase-wrap">
+			<div class="texture-overlay"></div>
+			<div class="container">
+				<div class="row" style="width:670px;margin-left:auto;margin-right:auto">
+					<div class="col-md-6">
+							<div class="device wp3">
+							<center>
+								<a id="bestel" href="javascript:bestel();" class="download-btn"
+									style="position: absolute; bottom: 12px; left: 290px; padding: 10px;">Bestel...</a>
+								<a id="bevestig" href="javascript:bevestig();"
+									class="download-btn"
+									style="position: absolute; bottom: 113px; left: 475px; padding: 10px; display: none; width: 150px;">Bevestig!</a>
+								<a id="annuleer" href="javascript:annuleer();"
+									class="download-btn"
+									style="position: absolute; bottom: 113px; left: 45px; padding: 10px; display: none; width: 150px;">Annuleer</a>
+								
+								<a href="javascript:decrease($('#mondayCnt'));" 
+									class="orderbtns fa fa-minus-square monday"
+									style="color: white; position: absolute; top: 126px; left: 247px; padding: 10px;"></a>
+								<a href="javascript:increase($('#mondayCnt'));"
+									class="orderbtns fa fa-plus-square monday"
+									style="color: white; position: absolute; top: 126px; left: 390px; padding: 10px;"></a>
+								<i id="mondayCnt" class="orderAmount" style="top: 96px; ">0</i> 
+								<div id="maandagDish" class="dishes" style="margin-top:150px">
+									...Loading...
+								</div>
+								
+																
+								<a href="javascript:decrease($('#tuesdayCnt'));"
+									class="orderbtns fa fa-minus-square tuesday"
+									style="color: white; position: absolute; top: 226px; left: 247px; padding: 10px;"></a>
+								<a href="javascript:increase($('#tuesdayCnt'));"
+									class="orderbtns fa fa-plus-square tuesday"
+									style="color: white; position: absolute; top: 226px; left: 390px; padding: 10px;"></a>
+								<i id="tuesdayCnt" class="orderAmount"	style="top: 194px;">0</i> 
+								<div id="dinsdagDish" class="dishes" style="margin-top:50px">
+									...Loading...
+								</div>
+									
+									
+								<a href="javascript:decrease($('#wednesdayCnt'));"
+									class="orderbtns fa fa-minus-square wednesday"
+									style="color: white; position: absolute; top: 324px; left: 247px; padding: 10px;"></a>
+								<a href="javascript:increase($('#wednesdayCnt'));"
+									class="orderbtns fa fa-plus-square wednesday"
+									style="color: white; position: absolute; top: 324px; left: 390px; padding: 10px;"></a>
+								<i id="wednesdayCnt" class="orderAmount" style="top: 293px; ">0</i> 
+								<div id="woensdagDish" class="dishes" style="margin-top:50px">
+									...Loading...
+								</div>
+																
+								<a	href="javascript:decrease($('#thursdayCnt'));"
+									class="orderbtns fa fa-minus-square thursday"
+									style="color: white; position: absolute; top: 424px; left: 247px; padding: 10px;"></a>
+								<a href="javascript:increase($('#thursdayCnt'));"
+									class="orderbtns fa fa-plus-square thursday"
+									style="color: white; position: absolute; top: 424px; left: 390px; padding: 10px;"></a>
+								<i id="thursdayCnt" class="orderAmount"	style="top: 390px; ">0</i> 								
+								<div id="donderdagDish" class="dishes" style="margin-top:50px">
+									...Loading...
+								</div>
+																	
+								<a	href="javascript:decrease($('#fridayCnt'));"
+									class="orderbtns fa fa-minus-square friday"
+									style="color: white; position: absolute; top: 524px; left: 247px; padding: 10px;"></a>
+								<a href="javascript:increase($('#fridayCnt'));"
+									class="orderbtns fa fa-plus-square friday"
+									style="color: white; position: absolute; top: 524px; left: 390px; padding: 10px;"></a>
+								<i id="fridayCnt" class="orderAmount" style="top: 495px; ">0</i>
+								<div id="vrijdagDish" class="dishes" style="margin-top:50px">
+									...Loading...
+								</div>								
+
+	
+								<div id="extraInfo" style="width: 616px; height: 161px; position: absolute;bottom: 21px;left: 25px;color: white;
+	    													z-index: -1;  background-color: black; border-top: 1px solid white;display:none">
+									
+									<ul style="list-style-type:none">
+										<li><div>Email<i style="color:red">*</i></div><input type="text" id="email" style="color:black;width: 260px;" /></li>
+										<li style="margin-top:10px;"><div>Adres, tijdstip, vegetarisch,...</div> <textarea id="locatie" style="width: 580px;height:50px;color:black"></textarea></li>
+<!-- 										<li><div>Tijdstip</div><input type="text" id="tijdstip" style="color:black;width:43px" /></li> -->
+									</ul>
+									
+								</div>
+								</center>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="height:58px;background-color: #E6A525"></div>
+	</section>
+
+	<section class="screenshots-intro" id="missdinner">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="features-img wp1" style="line-height: 260px;height:250px;">
+						<img src="./img/missdinner_logo.png" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	
+	<section class="screenshots-intro" id="missdinner" style="margin-bottom: 150px">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-6 nopadding features-intro-img">
+					<div class="missdinner-bg">
+						<div class="texture-overlay"></div>
+					</div>
+				</div>
+				<div class="col-md-6 nopadding">
+					<div class="missdinner-slider">
+
+					<p>Onze keuken stopt niet met vlaamse kost. Naast de gekende klassiekers wagen
+						wij ons vaak, en succesvol, aan andere keukens. Japans, Thais,
+						Marrokaans, Zuid-Amerikaans,... Culinaire excursies zijn een
+						hoeksteen van onze service.</p>
+					<p>
+						<a href="#screenshots" class="arrow-btn">Bekijk wat
+							voorbeelden van hapjes en gerechtjes.<i class="fa fa-long-arrow-right"></i>
+						</a>
+					</p>
+						<p>
+							<a href="javascript:alert('Komt eraan...');" class="download-btn">Download
+								menu <i class="fa fa-download"></i>
+							</a>
+						</p>
+					
+				</div>
+				</div>
+			</div>
+		</div>
+	</section>	
+	
+	
+	
+	
+	<section class="screenshots" id="screenshots">
+		<div class="container-fluid">
+			<div class="row">
+				<ul class="grid">
+					<li>
+						<figure>
+							<img src="img/dishes/hap1_.png" alt="cerise noire">
+							<figcaption>
+								<div class="caption-content">
+									<a href="img/dishes/hap1.jpg" class="single_image"> <i
+										class="fa fa-search"></i><br>
+									</a>
+								</div>
+							</figcaption>
+						</figure>
+					</li>
+<li>
+						<figure>
+							<img src="img/dishes/hap10.jpg" alt="cerise noire">
+							<figcaption>
+								<div class="caption-content">
+									<a href="img/dishes/hap10.jpg" class="single_image"> <i
+										class="fa fa-search"></i><br>
+									</a>
+								</div>
+							</figcaption>
+						</figure>
+					</li>
+					<li>
+						<figure>
+							<img src="img/dishes/hap11.jpg" alt="cerise noire">
+							<figcaption>
+								<div class="caption-content">
+									<a href="img/dishes/hap11.jpg" class="single_image"> <i
+										class="fa fa-search"></i><br>
+									</a>
+								</div>
+							</figcaption>
+						</figure>
+					</li>					
+					<li>
+						<figure>
+							<img src="img/dishes/hap4_.png" alt="cerise noire">
+							<figcaption>
+								<div class="caption-content">
+									<a href="img/dishes/hap4.jpg" class="single_image"> <i
+										class="fa fa-search"></i><br>
+									</a>
+								</div>
+							</figcaption>
+						</figure>
+					</li>
+				</ul>
+			</div>
+			<div class="row">
+				<ul class="grid">
+					<li>
+						<figure>
+							<img src="img/lunchke.jpg" alt="cerise noire">
+							<figcaption>
+								<div class="caption-content">
+									<a href="img/lunchke.jpg" class="single_image"> <i
+										class="fa fa-search"></i><br>
+									</a>
+								</div>
+							</figcaption>
+						</figure>
+					</li>				
+					<li>
+						<figure>
+							<img src="img/dishes/hap7_.png" alt="cerise noire">
+							<figcaption>
+								<div class="caption-content">
+									<a href="img/dishes/hap7.jpg" class="single_image"> <i
+										class="fa fa-search"></i><br>
+									</a>
+								</div>
+							</figcaption>
+						</figure>
+					</li>
+					<li>
+						<figure>
+							<img src="img/dishes/hap9.jpg" alt="cerise noire">
+							<figcaption>
+								<div class="caption-content">
+									<a href="img/dishes/hap9.jpg" class="single_image"> <i
+										class="fa fa-search"></i><br>
+									</a>
+								</div>
+							</figcaption>
+						</figure>
+					</li>
+					<li>
+						<figure>
+							<img src="img/dishes/cerisenoirewit.png" alt="cerise noire">
+							<figcaption>
+								<div class="caption-content">
+									<a href="img/dishes/cerisenoirewit.png" class="single_image"> <i
+										class="fa fa-search"></i><br>
+									</a>
+								</div>
+							</figcaption>
+						</figure>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+	<section class="download" id="download"></section>
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-5">
+					<h1 class="footer-logo">
+						<img src="img/cerisenoire.png" alt="Footer Logo Cerise Noire">
+					</h1>
+					<p>
+						Boskapellaan 56, 9080 Lochristi. Tel: 0473.79.07.57 <a
+							href="mailto:info@cerisenoire.be">info@cerisenoire.be</a>
+					</p>
+				</div>
+				<div class="col-md-7">
+					<ul class="footer-nav">
+						<li><a href="#ladylunch">Lunch</a></li>
+						<li><a href="#cerisenoire">Traiteur</a></li>
+						<li><a href="#missdinner">Dinner</a></li>
+					</ul>
+				</div>
+
+
+
+
+
+			</div>
+		</div>
+	</footer>
+	<div class="overlay overlay-boxify">
+		<nav>
+			<ul>
+				<li><a href="#ladylunch"><img src="./img/ladylunch_logo.png"
+						class="logos" /></a></li>
+				<li><a href="#cerisenoire"><img src="./img/cerisenoire_logo.png"
+						class="logos" /></a></li>
+				<li><a href="#missdinner"><img
+						src="./img/missdinner_logo.png" class="logos" /></a></li>
+			</ul>
+		</nav>
+	</div>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="js/min/toucheffects-min.js"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="js/flickity.pkgd.min.js"></script>
+	<script src="js/jquery.fancybox.pack.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="js/retina.js"></script>
+	<script src="js/waypoints.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/min/scripts-min.js"></script>
+	<!-- Google Analytics -->
+	<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	
+	ga('create', 'UA-69533530-1', 'auto');
+	ga('send', 'pageview');
+	</script>
+	<!-- End Google Analytics -->
+</body>
+</html>

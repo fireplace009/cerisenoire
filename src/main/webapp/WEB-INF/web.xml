@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE web-app PUBLIC
+ "-//Oracle Corporation//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+	<servlet>
+		<servlet-name>performer</servlet-name>
+		<servlet-class>cerisenoire.Performer</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>performer</servlet-name>
+		<url-pattern>/p</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>weekMenu</servlet-name>
+		<servlet-class>cerisenoire.WeekMenu</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>weekMenu</servlet-name>
+		<url-pattern>/w</url-pattern>
+	</servlet-mapping>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>weekMenu</web-resource-name>
+			<url-pattern>/w</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>admin</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+</web-app>

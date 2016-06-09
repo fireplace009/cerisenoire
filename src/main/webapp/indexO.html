@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cerise Noire - Lady Lunch - Miss Dinner</title>
+<meta name="description"
+	content="Traiteur op maat en Lunch voor bedrijven" />
+<meta name="keywords"
+	content="traiteur, Lochristi, gent, catering, feestmaal" />
+<meta name="author" content="Dumazzz" />
+<!-- Bootstrap -->
+<script src="js/modernizr.custom.js"></script>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/jquery.fancybox.css" rel="stylesheet">
+<link href="css/flickity.css" rel="stylesheet">
+<link href="css/animate.css" rel="stylesheet">
+<link
+	href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+	rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700'
+	rel='stylesheet' type='text/css'>
+<link href="css/styles.css" rel="stylesheet">
+<link href="css/queries.css" rel="stylesheet">
+<!-- Facebook and Twitter integration -->
+<meta property="og:title" content="" />
+<meta property="og:image" content="" />
+<meta property="og:url" content="" />
+<meta property="og:site_name" content="" />
+<meta property="og:description" content="" />
+<meta name="twitter:title" content="" />
+<meta name="twitter:image" content="" />
+<meta name="twitter:url" content="" />
+<meta name="twitter:card" content="" />
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+<script>
+	function decrease(o) {
+		if (parseInt(o.html()) > 0) {
+			o.html(parseInt(o.html()) - 1);
+		}
+		if (parseInt(o.html()) == 0) {
+			o.css('opacity', 0.42);
+		}
+	}
+	function increase(o) {
+		o.html(parseInt(o.html()) + 1);
+		o.css('opacity', 1);
+	}
+	function bestel() {
+		$('.orderbtns').show();
+		$('#bestel').hide();
+		$('#bevestig').show();
+		$('#annuleer').show();
+		$('#extraInfo').show();
+		$('.orderAmount').show();
+	}
+	function bevestig() {
+		var email = $('#email').val();
+		var monday = $('#mondayCnt').html();
+		var tuesday = $('#tuesdayCnt').html();
+		var wednesday = $('#wednesdayCnt').html();
+		var thursday = $('#thursdayCnt').html();
+		var friday = $('#fridayCnt').html();
+
+		if (email == '' || email == undefined || !validateEmail(email)) {
+			alert('Gelieve een correct email adres te gebruiken.');
+		} else if (monday == '0' && tuesday == '0' && wednesday == '0'
+				&& thursday == '0' && friday == '0') {
+			alert('Gelieve minimum 1 lunch aan te duiden.');
+		} else {
+			$
+					.post(
+							"p",
+							{
+								email : $('#email').val(),
+								locatie : $('#locatie').val(),
+								maandag : monday,
+								dinsdag : tuesday,
+								woensdag : wednesday,
+								donderdag : thursday,
+								vrijdag : friday
+							},
+							function(data) {
+								$('#extraInfo').hide();
+								alert('Bestelling bevestigd. U zal een email ontvangen ter bevestiging. Alvast bedankt.');
+								$('.orderAmount').hide();
+								$('.orderbtns').hide();
+								$('#bestel').show();
+								$('#bevestig').hide();
+								$('#annuleer').hide();
+								$('.orderAmount').hide().css('opacity', 0.42)
+										.html('0');
+							});
+		}
+
+	}
+	function annuleer() {
+		$('.orderbtns').hide();
+		$('#bestel').show();
+		$('#bevestig').hide();
+		$('#annuleer').hide();
+		$('#extraInfo').hide();
+		$('.orderAmount').hide().css('opacity', 0.42).html('0');
+	}
+	function validateEmail($email) {
+		var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+		return emailReg.test($email);
+	}
+</script>
+
+</head>
+<body>
+
+	<div class="overlay overlay-boxify"
+		style="opacity: 1; visibility: visible;">
+		<nav style="z-index:-1;height:20%">
+			<ul>
+				<li style="opacity: 1"><a href="#ladylunch"><img
+						src="./img/ladylunch_logo.png" class="logos" /></a></li>
+				<li style="opacity: 1"><a href="#cerisenoire"><img
+						src="./img/cerisenoire_logo.png" class="logos" /></a></li>
+				<li style="opacity: 1"><a href="#missdinner"><img
+						src="./img/missdinner_logo.png" class="logos" /></a></li>
+			</ul>
+		</nav>
+		<center>Deze week, (eindelijk!), de vernieuwde site ! <br/><a href="mailto:info@cerisenoire.be">info@cerisenoire.be</a></center>
+	</div>
+</body>
+</html>
