@@ -1,0 +1,27 @@
+<configuration>
+	<appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+		<smtpHost>smtp.mandrillapp.com</smtpHost>
+		<smtpPort>587</smtpPort>
+		<to>patteeuw.bernard@gmail.com</to>
+		<from>error@cerisenoire.be</from>
+		<STARTTLS>true</STARTTLS>
+		<username>patteeuw.bernard@gmail.com</username>
+		<password>ZIeKklNJZK9ox6KmWnIjfQ</password>
+		<subject>Error: %logger{20} - %m</subject>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%date %-5level %logger{35} - %message%n</pattern>
+		</layout>
+	</appender>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n</pattern>
+		</encoder>
+	</appender>
+
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="EMAIL" />
+	</root>
+
+</configuration>

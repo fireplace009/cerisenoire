@@ -303,7 +303,7 @@ $(function() {
 								<p>Piekfijn verzorgde hapjes, gerechten, buffetten,...</p>
 								<p>
 									<a target="_blank" href="https://sites.google.com/view/cerisenoire" 
-									class="download-btn">Zie ons Kerst en Nieuwjaarsmenu</a>
+									class="download-btn" style="font-size:xx-large">Zie ons Kerst en Nieuwjaarsmenu</a>
 								</p>
 							</li>
 							<li>
@@ -342,9 +342,7 @@ $(function() {
 					</div>
 					<center>
 					<span style="position: absolute;bottom: 55px;text-align:center;display:block;">
-					Bestel hier uw dagelijkse dosis lekkers ! 
-  					Bestel tot 16:00 ten laatste voor de volgende dag, aangezien alles vers wordt gekocht en klaargemaakt. 
-  					We brengen u dan rond de middag uw bestelling tot aan uw bedrijf hier in Lochristi.
+					Wenst u ook op de hoogte te blijven van onze wekelijkse gerechten? Stuur me dan een <a href="mailto:info@cerisenoire.be" style="font-weight:bold;font-size:large"> mail </a> en we voegen je toe op onze mailing lijst. Op die manier krijgt u onze lunch/dinner van de week en kan u al dan niet bestellen.
   					</span>
   					</center>
   				</div>
@@ -354,94 +352,7 @@ $(function() {
 	<section class="showcase">
 		<div style="height:58px;background-color: #E6A525"></div>
 		<div class="showcase-wrap">
-			<div class="texture-overlay"></div>
-			<div class="container">
-				<div class="row" style="width:670px;margin-left:auto;margin-right:auto">
-					<div class="col-md-6">
-							<div class="device wp3">
-							<center>
-								<a id="bestel" href="javascript:bestel();" class="download-btn"
-									style="position: absolute; bottom: 12px; left: 290px; padding: 10px;">Bestel...</a>
-								<a id="bevestig" href="javascript:bevestig();"
-									class="download-btn"
-									style="position: absolute; bottom: 113px; left: 475px; padding: 10px; display: none; width: 150px;">Bevestig!</a>
-								<a id="annuleer" href="javascript:annuleer();"
-									class="download-btn"
-									style="position: absolute; bottom: 113px; left: 45px; padding: 10px; display: none; width: 150px;">Annuleer</a>
-								
-								<a href="javascript:decrease($('#mondayCnt'));" 
-									class="orderbtns fa fa-minus-square monday"
-									style="color: white; position: absolute; top: 126px; left: 247px; padding: 10px;"></a>
-								<a href="javascript:increase($('#mondayCnt'));"
-									class="orderbtns fa fa-plus-square monday"
-									style="color: white; position: absolute; top: 126px; left: 390px; padding: 10px;"></a>
-								<i id="mondayCnt" class="orderAmount" style="top: 96px; ">0</i> 
-								<div id="maandagDish" class="dishes" style="margin-top:150px">
-									...Loading...
-								</div>
-								
-																
-								<a href="javascript:decrease($('#tuesdayCnt'));"
-									class="orderbtns fa fa-minus-square tuesday"
-									style="color: white; position: absolute; top: 226px; left: 247px; padding: 10px;"></a>
-								<a href="javascript:increase($('#tuesdayCnt'));"
-									class="orderbtns fa fa-plus-square tuesday"
-									style="color: white; position: absolute; top: 226px; left: 390px; padding: 10px;"></a>
-								<i id="tuesdayCnt" class="orderAmount"	style="top: 194px;">0</i> 
-								<div id="dinsdagDish" class="dishes" style="margin-top:50px">
-									...Loading...
-								</div>
-									
-									
-								<a href="javascript:decrease($('#wednesdayCnt'));"
-									class="orderbtns fa fa-minus-square wednesday"
-									style="color: white; position: absolute; top: 324px; left: 247px; padding: 10px;"></a>
-								<a href="javascript:increase($('#wednesdayCnt'));"
-									class="orderbtns fa fa-plus-square wednesday"
-									style="color: white; position: absolute; top: 324px; left: 390px; padding: 10px;"></a>
-								<i id="wednesdayCnt" class="orderAmount" style="top: 293px; ">0</i> 
-								<div id="woensdagDish" class="dishes" style="margin-top:50px">
-									...Loading...
-								</div>
-																
-								<a	href="javascript:decrease($('#thursdayCnt'));"
-									class="orderbtns fa fa-minus-square thursday"
-									style="color: white; position: absolute; top: 424px; left: 247px; padding: 10px;"></a>
-								<a href="javascript:increase($('#thursdayCnt'));"
-									class="orderbtns fa fa-plus-square thursday"
-									style="color: white; position: absolute; top: 424px; left: 390px; padding: 10px;"></a>
-								<i id="thursdayCnt" class="orderAmount"	style="top: 390px; ">0</i> 								
-								<div id="donderdagDish" class="dishes" style="margin-top:50px">
-									...Loading...
-								</div>
-																	
-								<a	href="javascript:decrease($('#fridayCnt'));"
-									class="orderbtns fa fa-minus-square friday"
-									style="color: white; position: absolute; top: 524px; left: 247px; padding: 10px;"></a>
-								<a href="javascript:increase($('#fridayCnt'));"
-									class="orderbtns fa fa-plus-square friday"
-									style="color: white; position: absolute; top: 524px; left: 390px; padding: 10px;"></a>
-								<i id="fridayCnt" class="orderAmount" style="top: 495px; ">0</i>
-								<div id="vrijdagDish" class="dishes" style="margin-top:50px">
-									...Loading...
-								</div>								
-
-	
-								<div id="extraInfo" style="width: 616px; height: 161px; position: absolute;bottom: 21px;left: 25px;color: white;
-	    													z-index: -1;  background-color: black; border-top: 1px solid white;display:none">
-									
-									<ul style="list-style-type:none">
-										<li><div>Email<i style="color:red">*</i></div><input type="text" id="email" style="color:black;width: 260px;" /></li>
-										<li style="margin-top:10px;"><div>Adres, tijdstip, vegetarisch,...</div> <textarea id="locatie" style="width: 580px;height:50px;color:black"></textarea></li>
-<!-- 										<li><div>Tijdstip</div><input type="text" id="tijdstip" style="color:black;width:43px" /></li> -->
-									</ul>
-									
-								</div>
-								</center>
-							</div>
-					</div>
-				</div>
-			</div>
+			<div class="texture-overlay"></div>			
 		</div>
 		<div style="height:58px;background-color: #E6A525"></div>
 	</section>

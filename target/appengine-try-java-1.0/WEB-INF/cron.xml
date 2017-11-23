@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/w</url>
+    <description>refreshes the week menu</description>
+    <schedule>every saturday 01:11</schedule>
+  </cron>
+</cronentries>
